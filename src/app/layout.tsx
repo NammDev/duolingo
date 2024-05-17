@@ -4,6 +4,7 @@ import { Nunito } from 'next/font/google'
 
 import './globals.css'
 import { siteConfig } from '@/config'
+import { Toaster } from '@/components/ui/sonner'
 
 const font = Nunito({ subsets: ['latin'] })
 
@@ -31,8 +32,8 @@ export default function RootLayout({
     >
       <html lang='en'>
         <body className={font.className}>
-          {/* <Toaster theme='light' richColors closeButton />
-          <ExitModal />
+          <Toaster theme='light' richColors closeButton />
+          {/* <ExitModal />
           <HeartsModal />
           <PracticeModal /> */}
           {children}

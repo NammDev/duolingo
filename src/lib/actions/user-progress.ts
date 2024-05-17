@@ -47,6 +47,7 @@ export const upsertUserProgress = async (courseId: number) => {
     })
   }
 
+  // break the cache for the user progress
   revalidatePath('/courses')
   revalidatePath('/learn')
   redirect('/learn')

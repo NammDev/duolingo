@@ -37,10 +37,7 @@ const LearnPage = async () => {
         <Quests points={userProgress.points} /> */}
       </StickyWrapper>
       <FeedWrapper>
-        <LearnHeader
-          // title={userProgress.activeCourse.title}
-          title='Active Course'
-        />
+        <LearnHeader title={userProgress.activeCourse.title} />
         <div className='space-y-4'>
           <div className='h-[700px] bg-blue-200 w-full' />
           <div className='h-[700px] bg-blue-200 w-full' />
