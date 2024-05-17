@@ -2,21 +2,35 @@ import { FeedWrapper } from '@/components/layouts/feed-wrapper'
 import { StickyWrapper } from '@/components/layouts/sticky-wrapper'
 import { LearnHeader } from './_components/learn-header'
 import { UserProgress } from '@/components/user-progress'
+import { getUserProgress } from '@/lib/actions/user-progress'
+import { redirect } from 'next/navigation'
 
 const LearnPage = async () => {
+  // const [userProgress, units, courseProgress, lessonPercentage, userSubscription] =
+  //   await Promise.all([
+  //     await getUserProgress(),
+  //     await getCourseProgress(),
+  //     await getLessonPercentage(),
+  //     await getUnits(),
+  //     await getUserSubscription(),
+  //   ])
+
+  const userProgress = await getUserProgress()
+  // if (!courseProgress || !userProgress || !userProgress.activeCourse) redirect('/courses')
+  if (!userProgress || !userProgress.activeCourse) redirect('/courses')
+
+  // const isPro = !!userSubscription?.isActive
+
   return (
     <div className='flex flex-row-reverse gap-[48px] px-6'>
       <StickyWrapper>
         <h1>User Progress</h1>
 
         <UserProgress
-          // activeCourse={userProgress.activeCourse}
-          // hearts={userProgress.hearts}
-          // points={userProgress.points}
+          activeCourse={userProgress.activeCourse}
+          hearts={userProgress.hearts}
+          points={userProgress.points}
           // hasActiveSubscription={isPro}
-          activeCourse={{ title: 'Spanish', imageSrc: '/es.svg' }}
-          hearts={5}
-          points={100}
           hasActiveSubscription={false}
         />
         {/* {!isPro && <Promo />}
