@@ -4,18 +4,22 @@ import { LearnHeader } from './_components/learn-header'
 import { UserProgress } from '@/components/user-progress'
 import { getUserProgress } from '@/lib/actions/user-progress'
 import { redirect } from 'next/navigation'
+import { getUnits } from '@/lib/actions/units'
+import { Unit } from './_components/unit'
 
 const LearnPage = async () => {
-  // const [userProgress, units, courseProgress, lessonPercentage, userSubscription] =
-  //   await Promise.all([
-  //     await getUserProgress(),
-  //     await getCourseProgress(),
-  //     await getLessonPercentage(),
-  //     await getUnits(),
-  //     await getUserSubscription(),
-  //   ])
+  const [
+    userProgress,
+    units,
+    //  courseProgress, lessonPercentage, userSubscription
+  ] = await Promise.all([
+    await getUserProgress(),
+    await getUnits(),
+    // await getCourseProgress(),
+    // await getLessonPercentage(),
+    // await getUserSubscription(),
+  ])
 
-  const userProgress = await getUserProgress()
   // if (!courseProgress || !userProgress || !userProgress.activeCourse) redirect('/courses')
   if (!userProgress || !userProgress.activeCourse) redirect('/courses')
 
@@ -38,13 +42,7 @@ const LearnPage = async () => {
       </StickyWrapper>
       <FeedWrapper>
         <LearnHeader title={userProgress.activeCourse.title} />
-        <div className='space-y-4'>
-          <div className='h-[700px] bg-blue-200 w-full' />
-          <div className='h-[700px] bg-blue-200 w-full' />
-          <div className='h-[700px] bg-blue-200 w-full' />
-          <div className='h-[700px] bg-blue-200 w-full' />
-        </div>
-        {/* {units.map((unit) => (
+        {units.map((unit) => (
           <div key={unit.id} className='mb-10'>
             <Unit
               id={unit.id}
@@ -52,11 +50,11 @@ const LearnPage = async () => {
               description={unit.description}
               title={unit.title}
               lessons={unit.lessons}
-              activeLesson={courseProgress.activeLesson}
-              activeLessonPercentage={lessonPercentage}
+              // activeLesson={courseProgress.activeLesson}
+              // activeLessonPercentage={lessonPercentage}
             />
           </div>
-        ))} */}
+        ))}
       </FeedWrapper>
     </div>
   )
