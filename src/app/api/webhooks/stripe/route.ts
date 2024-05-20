@@ -11,7 +11,6 @@ export async function POST(req: NextRequest) {
   const signature = headers().get('Stripe-Signature') as string
 
   let event: Stripe.Event
-
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
   } catch (error: unknown) {
@@ -19,15 +18,11 @@ export async function POST(req: NextRequest) {
       status: 400,
     })
   }
-
   const session = event.data.object as Stripe.Checkout.Session
-
   // user subscription completed
   if (event.type === 'checkout.session.completed') {
     const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
-
     if (!session?.metadata?.userId) return new NextResponse('User id is required.', { status: 400 })
-
     await db.insert(userSubscription).values({
       userId: session.metadata.userId,
       stripeSubscriptionId: subscription.id,
@@ -36,11 +31,9 @@ export async function POST(req: NextRequest) {
       stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000), // in ms
     })
   }
-
   // renew user subscription
   if (event.type === 'invoice.payment_succeeded') {
     const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
-
     await db
       .update(userSubscription)
       .set({
@@ -51,6 +44,5 @@ export async function POST(req: NextRequest) {
       })
       .where(eq(userSubscription.stripeSubscriptionId, subscription.id))
   }
-
   return new NextResponse(null, { status: 200 })
 }
