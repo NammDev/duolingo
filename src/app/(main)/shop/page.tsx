@@ -8,6 +8,7 @@ import { getUserProgress } from '@/lib/actions/user-progress'
 import { getUserSubscription } from '@/lib/actions/user-subscription'
 import { StickyWrapper } from '@/components/layouts/sticky-wrapper'
 import { FeedWrapper } from '@/components/layouts/feed-wrapper'
+import { Quests } from '@/components/quests'
 
 const ShopPage = async () => {
   const [userProgress, userSubscription] = await Promise.all([
@@ -29,7 +30,7 @@ const ShopPage = async () => {
           hasActiveSubscription={isPro}
         />
 
-        {/* <Quests points={userProgress.points} /> */}
+        <Quests points={userProgress.points} />
       </StickyWrapper>
 
       <FeedWrapper>
