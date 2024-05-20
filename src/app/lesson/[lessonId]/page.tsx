@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
-
-import { getLesson, getUserProgress, getUserSubscription } from '@/db/queries'
-
 import { Quiz } from '../_components/quiz'
+import { getLesson } from '@/lib/actions/lessons'
+import { getUserProgress } from '@/lib/actions/user-progress'
+import { getUserSubscription } from '@/lib/actions/user-subscription'
 
 type LessonIdPageProps = {
   params: {
@@ -11,14 +11,10 @@ type LessonIdPageProps = {
 }
 
 const LessonIdPage = async ({ params }: LessonIdPageProps) => {
-  const lessonData = getLesson(params.lessonId)
-  const userProgressData = getUserProgress()
-  const userSubscriptionData = getUserSubscription()
-
   const [lesson, userProgress, userSubscription] = await Promise.all([
-    lessonData,
-    userProgressData,
-    userSubscriptionData,
+    await getLesson(params.lessonId),
+    await getUserProgress(),
+    await getUserSubscription(),
   ])
 
   if (!lesson || !userProgress) return redirect('/learn')
