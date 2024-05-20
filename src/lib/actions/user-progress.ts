@@ -9,6 +9,7 @@ import { getCourseById } from './courses'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getUserSubscription } from './user-subscription'
+import { MAX_HEARTS, POINTS_TO_REFILL } from '../../../constants'
 
 export const getUserProgress = cache(async () => {
   const user = await getCachedAuthUser()
@@ -98,4 +99,25 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath('/quests')
   revalidatePath('/leaderboard')
   revalidatePath(`/lesson/${lessonId}`)
+}
+
+export const refillHearts = async () => {
+  const currentUserProgress = await getUserProgress()
+
+  if (!currentUserProgress) throw new Error('User progress not found.')
+  if (currentUserProgress.hearts === MAX_HEARTS) throw new Error('Hearts are already full.')
+  if (currentUserProgress.points < POINTS_TO_REFILL) throw new Error('Not enough points.')
+
+  await db
+    .update(userProgress)
+    .set({
+      hearts: MAX_HEARTS,
+      points: currentUserProgress.points - POINTS_TO_REFILL,
+    })
+    .where(eq(userProgress.userId, currentUserProgress.userId))
+
+  revalidatePath('/shop')
+  revalidatePath('/learn')
+  revalidatePath('/quests')
+  revalidatePath('/leaderboard')
 }
