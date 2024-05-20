@@ -19,8 +19,11 @@ const LearnPage = async () => {
     //  userSubscription
   ] = await Promise.all([
     await getUserProgress(),
+    // load all units of user ( bao gồm tất cả lessons có trong unit đó)
     await getUnits(),
+    // load active lesson of user (bao gồm tất cả challenges có trong lesson đó và activeLesson thuộc unit nào)
     await getCourseProgress(),
+    // Tính xem bao nhiêu % lesson đã hoàn thành
     await getLessonPercentage(),
     // await getUserSubscription(),
   ])

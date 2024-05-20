@@ -3,11 +3,12 @@
 import { db } from '@/db'
 import { cache } from 'react'
 import { getCachedAuthUser } from './users'
-import { eq } from 'drizzle-orm'
-import { userProgress } from '@/db/schema'
+import { and, eq } from 'drizzle-orm'
+import { challengeProgress, challenges, userProgress } from '@/db/schema'
 import { getCourseById } from './courses'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getUserSubscription } from './user-subscription'
 
 export const getUserProgress = cache(async () => {
   const user = await getCachedAuthUser()
@@ -51,4 +52,50 @@ export const upsertUserProgress = async (courseId: number) => {
   revalidatePath('/courses')
   revalidatePath('/learn')
   redirect('/learn')
+}
+
+export const reduceHearts = async (challengeId: number) => {
+  const user = await getCachedAuthUser()
+  if (!user) throw new Error('Unauthorized.')
+
+  const currentUserProgress = await getUserProgress()
+  const userSubscription = await getUserSubscription()
+
+  const challenge = await db.query.challenges.findFirst({
+    where: eq(challenges.id, challengeId),
+  })
+
+  if (!challenge) throw new Error('Challenge not found.')
+
+  const lessonId = challenge.lessonId
+
+  const existingChallengeProgress = await db.query.challengeProgress.findFirst({
+    where: and(
+      eq(challengeProgress.userId, user.id),
+      eq(challengeProgress.challengeId, challengeId)
+    ),
+  })
+
+  const isPractice = !!existingChallengeProgress
+
+  if (isPractice) return { error: 'practice' }
+
+  if (!currentUserProgress) throw new Error('User progress not found.')
+
+  if (userSubscription?.isActive) return { error: 'subscription' }
+
+  if (currentUserProgress.hearts === 0) return { error: 'hearts' }
+
+  await db
+    .update(userProgress)
+    .set({
+      hearts: Math.max(currentUserProgress.hearts - 1, 0),
+    })
+    .where(eq(userProgress.userId, user.id))
+
+  revalidatePath('/shop')
+  revalidatePath('/learn')
+  revalidatePath('/quests')
+  revalidatePath('/leaderboard')
+  revalidatePath(`/lesson/${lessonId}`)
 }
