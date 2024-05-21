@@ -11,7 +11,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:push": "npx drizzle-kit push",
-    "db:seed": "tsx ./src/db/seed.ts"
+    "db:seed": "tsx ./src/db/seed.ts",
+    "postinstall": "npm db:generate && npm db:migrate && npm db:push && npm db:seed"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.12",
@@ -25,8 +26,9 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.30.10",
     "lucide-react": "^0.378.0",
-    "next": "14.2.3",
+    "next": "14.1.4",
     "next-themes": "^0.3.0",
+    "pg": "^8.11.5",
     "postgres": "^3.4.4",
     "ra-data-simple-rest": "^4.16.17",
     "react": "^18.3.1",
@@ -42,8 +44,9 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/node": "20.12.12",
+    "@types/pg": "^8.11.6",
+    "@types/react": "18.3.2",
     "@types/react-dom": "^18",
     "drizzle-kit": "^0.21.2",
     "eslint": "^8",
@@ -51,6 +54,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.10.4",
-    "typescript": "^5"
+    "typescript": "5.4.5"
   }
 }
