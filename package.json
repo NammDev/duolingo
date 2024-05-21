@@ -12,7 +12,7 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "npx drizzle-kit push",
     "db:seed": "tsx ./src/db/seed.ts",
-    "postinstall": "npm db:generate && npm db:migrate && npm db:push && npm db:seed"
+    "postinstall": "npm run db:generate && npm run db:migrate && npm run db:push && npm run db:seed"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.12",
