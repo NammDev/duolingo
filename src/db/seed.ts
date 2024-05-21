@@ -2,7 +2,9 @@ import * as schema from '@/db/schema'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
-const client = postgres('postgresql://postgres:namkhanh@localhost:5432/duolingo')
+const client = postgres(
+  'postgres://uautrh3g2qrjva:p4f8bd79c8ca199907c310db40bba326e62ce3ec2b0d5682080b718370efb3bd5@caij57unh724n3.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d6c31sodlvsse8'
+)
 export const db = drizzle(client, { schema })
 
 const main = async () => {
