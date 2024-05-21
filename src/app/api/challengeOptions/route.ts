@@ -1,30 +1,30 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server'
 
-import db from "@/db/drizzle";
-import { challengeOptions } from "@/db/schema";
-import { getIsAdmin } from "@/lib/admin";
+import { challengeOptions } from '@/db/schema'
+import getIsAdmin from '@/lib/admin'
+import { db } from '@/db'
 
 export const GET = async () => {
-  const isAdmin = getIsAdmin();
-  if (!isAdmin) return new NextResponse("Unauthorized.", { status: 401 });
+  const isAdmin = getIsAdmin()
+  if (!isAdmin) return new NextResponse('Unauthorized.', { status: 401 })
 
-  const data = await db.query.challengeOptions.findMany();
+  const data = await db.query.challengeOptions.findMany()
 
-  return NextResponse.json(data);
-};
+  return NextResponse.json(data)
+}
 
 export const POST = async (req: NextRequest) => {
-  const isAdmin = getIsAdmin();
-  if (!isAdmin) return new NextResponse("Unauthorized.", { status: 401 });
+  const isAdmin = getIsAdmin()
+  if (!isAdmin) return new NextResponse('Unauthorized.', { status: 401 })
 
-  const body = (await req.json()) as typeof challengeOptions.$inferSelect;
+  const body = (await req.json()) as typeof challengeOptions.$inferSelect
 
   const data = await db
     .insert(challengeOptions)
     .values({
       ...body,
     })
-    .returning();
+    .returning()
 
-  return NextResponse.json(data[0]);
-};
+  return NextResponse.json(data[0])
+}

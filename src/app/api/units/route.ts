@@ -1,8 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
-
-import db from '@/db/drizzle'
 import { units } from '@/db/schema'
-import { getIsAdmin } from '@/lib/admin'
+import getIsAdmin from '@/lib/admin'
+import { db } from '@/db'
 
 export const GET = async () => {
   const isAdmin = getIsAdmin()

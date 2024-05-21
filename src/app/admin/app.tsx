@@ -32,7 +32,7 @@ const App = () => {
         edit={CourseEdit}
       />
 
-      {/* <Resource
+      <Resource
         name='units'
         recordRepresentation='title'
         list={UnitList}
@@ -65,7 +65,7 @@ const App = () => {
         options={{
           label: 'Challenge Options',
         }}
-      /> */}
+      />
     </Admin>
   )
 }
